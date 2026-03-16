@@ -95,6 +95,26 @@
     <span>Built by Nicholas John · UIUC Gies College of Business</span>
   </div>
 
+  <!-- CORRELATION TABLE -->
+  <div class="corr-card" id="corrSection">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">Currency Correlation Matrix</div>
+        <div class="chart-subtitle" id="corrSubtitle">Pearson correlation of daily returns · <span id="corrPeriod">1 Week</span></div>
+      </div>
+      <div class="corr-legend">
+        <span class="legend-item"><span class="legend-box" style="background:rgba(76,175,130,0.85)"></span> Strong +</span>
+        <span class="legend-item"><span class="legend-box" style="background:rgba(138,155,181,0.3)"></span> Neutral</span>
+        <span class="legend-item"><span class="legend-box" style="background:rgba(224,92,92,0.85)"></span> Strong −</span>
+      </div>
+    </div>
+    <div class="corr-loading" id="corrLoading">
+      <div class="spinner"></div><span>Loading correlation data…</span>
+    </div>
+    <div class="corr-wrap" id="corrWrap" style="display:none;">
+      <table class="corr-table" id="corrTable"></table>
+    </div>
+  </div>
 </main>
 
 <script src="currency-dashboard.js"></script>
