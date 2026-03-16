@@ -604,7 +604,17 @@
   }
 
   ['amount','fromCurrency','toCurrency'].forEach(id =>
-    document.getElementById(id).addEventListener('input', updateConverter));
+    document.getElementById(id).addEventListener('input', () => {
+      updateConverter();
+      const to = document.getElementById('toCurrency').value;
+      if (to !== BASE) {
+        activePair = to;
+        document.querySelectorAll('.rate-card').forEach(c => {
+          c.classList.toggle('active', c.querySelector('.rate-pair')?.textContent === `USD / ${to}`);
+        });
+        loadChart();
+      }
+    }));
 
   document.getElementById('swapBtn').addEventListener('click', () => {
     const f = document.getElementById('fromCurrency');
