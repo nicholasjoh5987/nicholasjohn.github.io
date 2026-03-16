@@ -152,9 +152,16 @@ async function loadChart() {
     const labels = Object.keys(data.rates).sort();
     const values = labels.map(d => data.rates[d][activePair]);
 
-    document.getElementById('chartTitle').textContent = `USD / ${activePair} — ${periodLabel()}`;
-    document.getElementById('chartSubtitle').textContent =
-      `${labels[0]} → ${labels[labels.length-1]} · ${labels.length} data points`;
+    const first = values[0];
+      const last  = values[values.length - 1];
+      const pct   = ((last - first) / first * 100);
+      const sign  = pct >= 0 ? '+' : '';
+      const color = pct >= 0 ? 'var(--green)' : 'var(--red)';
+
+      document.getElementById('chartTitle').textContent = `USD / ${activePair} — ${periodLabel()}`;
+      document.getElementById('chartSubtitle').innerHTML =
+        `${labels[0]} → ${labels[labels.length-1]} · ${labels.length} data points &nbsp;
+        <span style="color:${color}; font-weight:500;">${sign}${pct.toFixed(2)}%</span>`;
 
     drawChart(labels, values);
   } catch(e) {
