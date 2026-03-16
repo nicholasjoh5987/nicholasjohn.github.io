@@ -756,7 +756,13 @@
   });
 
   // ── INIT ──
-  fetchRates();
+  fetchRates().then(() => {
+    activePair = 'EUR';
+    document.querySelectorAll('.rate-card').forEach(c => {
+      c.classList.toggle('active', c.querySelector('.rate-pair')?.textContent === 'USD / EUR');
+    });
+    loadChart();
+  });
   setInterval(fetchRates, 60000); // refresh every 60s
 </script>
 </body>
