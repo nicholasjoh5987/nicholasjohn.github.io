@@ -514,3 +514,51 @@ main { padding: 2.5rem 3rem; max-width: 1400px; margin: 0 auto; }
 }
   font-family: 'DM Sans', sans-serif;
 }
+/* ── EXPLAINER ── */
+.corr-body {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+}
+
+.corr-wrap {
+  flex: 1;
+  overflow-x: auto;
+  min-width: 0;
+}
+
+.corr-explainer {
+  width: 260px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  padding-left: 2rem;
+}
+
+.explainer-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.explainer-block {
+  margin-bottom: 1.2rem;
+}
+
+.explainer-heading {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+.explainer-block p {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
