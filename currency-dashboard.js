@@ -50,12 +50,17 @@ function renderRateCards() {
       if (diff > 0.001)       { changeClass = 'up';   changeIcon = '▲'; changeTxt = '+' + diff.toFixed(4) + '%'; }
       else if (diff < -0.001) { changeClass = 'down'; changeIcon = '▼'; changeTxt = diff.toFixed(4) + '%'; }
     }
-
+const currencyNames = {
+  EUR: 'Euro', GBP: 'British Pound', JPY: 'Japanese Yen',
+  CAD: 'Canadian Dollar', AUD: 'Australian Dollar', CHF: 'Swiss Franc',
+  CNY: 'Chinese Yuan', INR: 'Indian Rupee', MXN: 'Mexican Peso',
+  SGD: 'Singapore Dollar', HKD: 'Hong Kong Dollar', KRW: 'South Korean Won'
+};
     const card = document.createElement('div');
     card.className = 'rate-card' + (activePair === pair ? ' active' : '');
     card.style.animationDelay = (i * 0.04) + 's';
     card.innerHTML = `
-      <div class="rate-pair">USD / ${pair}</div>
+      <div class="rate-pair">USD / ${pair} <span class="rate-name">${currencyNames[pair] || ''}</span></div>
       <div class="rate-value">${formatRate(rate, pair)}</div>
       <div class="rate-change ${changeClass}">
         <span>${changeIcon}</span><span>${changeTxt}</span>
