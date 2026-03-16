@@ -275,7 +275,7 @@ document.querySelectorAll('.period-btn').forEach(btn => {
     btn.classList.add('active');
     activeDays = parseInt(btn.dataset.days);
     if (activePair) loadChart();
-    loadCorrelation();
+    setTimeout(() => loadCorrelation(), 100);
   });
 });
 
