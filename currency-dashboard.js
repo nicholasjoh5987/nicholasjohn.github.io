@@ -172,10 +172,18 @@ async function loadChart() {
 }
 
 function periodLabel() {
+ function periodLabel() {
   return {
-    7: '1 Week', 30: '1 Month', 90: '3 Months',
-    180: '6 Months', 365: '1 Year', 1095: '3 Years', 1825: '5 Years', 3650: '10 Years',
-    9125: '25 Years', 99999: 'Max (1999–Present)'
+    7: '1 Week',
+    30: '1 Month',
+    90: '3 Months',
+    180: '6 Months',
+    365: '1 Year',
+    1095: '3 Years',
+    1825: '5 Years',
+    3650: '10 Years',
+    9125: '25 Years',
+    99999: 'Max (1999–Present)'
   }[activeDays];
 }
 
