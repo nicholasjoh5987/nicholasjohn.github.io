@@ -69,7 +69,7 @@
       line-height: 1;
     }
 
-    .header-right {
+    .-right {
       display: flex;
       align-items: center;
       gap: 1.5rem;
@@ -218,7 +218,7 @@
     }
 
     /* ── RATE GRID ── */
-    .section-header {
+    .section- {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -304,7 +304,7 @@
       animation: fadeUp 0.6s 0.3s forwards;
     }
 
-    .chart-header {
+    .chart- {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
@@ -410,7 +410,7 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
-      header, main { padding: 1.5rem; }
+      , main { padding: 1.5rem; }
       .converter-row { flex-direction: column; }
       .swap-btn { margin-top: 0; align-self: center; transform: rotate(90deg); }
       .swap-btn:hover { transform: rotate(270deg); }
@@ -419,15 +419,19 @@
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <div class="header-eyebrow">Nicholas John · Capital Markets</div>
+<>
+  <div class="-left">
+    <div class="-eyebrow">Nicholas John · Capital Markets</div>
     <div class="header-title">FX Rate Dashboard</div>
   </div>
   <div class="header-right">
     <div class="last-updated" id="lastUpdated">Fetching data…</div>
     <div class="live-badge"><span class="live-dot"></span> Live</div>
   </div>
+  <a href="index.html" style="display:inline-flex; align-items:center; gap:0.5rem; color:var(--muted); text-decoration:none; font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; transition:color 0.3s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Back to Portfolio
+  </a>
 </header>
 
 <main>
