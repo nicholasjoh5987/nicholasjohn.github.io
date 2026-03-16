@@ -406,3 +406,12 @@ main { padding: 2.5rem 3rem; max-width: 1400px; margin: 0 auto; }
   .swap-btn { margin-top: 0; align-self: center; transform: rotate(90deg); }
   .swap-btn:hover { transform: rotate(270deg); }
 }
+.rate-name {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: none;
+  margin-top: 0.15rem;
+  font-family: 'DM Sans', sans-serif;
+}
