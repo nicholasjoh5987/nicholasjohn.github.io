@@ -278,6 +278,104 @@ document.querySelectorAll('.period-btn').forEach(btn => {
   });
 });
 
+// ── CORRELATION TABLE ──
+async function loadCorrelation() {
+  document.getElementById('corrLoading').style.display = 'flex';
+  document.getElementById('corrWrap').style.display    = 'none';
+
+  const end   = new Date();
+  const start = new Date();
+  if (activeDays === 99999) {
+    start.setFullYear(1999); start.setMonth(0); start.setDate(4);
+  } else {
+    start.setDate(end.getDate() - activeDays);
+  }
+  const fmt = d => d.toISOString().split('T')[0];
+
+  try {
+    const res  = await fetch(
+      `https://api.frankfurter.app/${fmt(start)}..${fmt(end)}?from=${BASE}&to=${PAIRS.join(',')}`
+    );
+    const data = await res.json();
+    const dates = Object.keys(data.rates).sort();
+
+    // Build returns series for each pair
+    const returns = {};
+    PAIRS.forEach(p => { returns[p] = []; });
+    for (let i = 1; i < dates.length; i++) {
+      PAIRS.forEach(p => {
+        const prev = data.rates[dates[i-1]][p];
+        const curr = data.rates[dates[i]][p];
+        returns[p].push((curr - prev) / prev);
+      });
+    }
+
+    // Pearson correlation
+    function pearson(a, b) {
+      const n   = a.length;
+      const ma  = a.reduce((s,v) => s+v,0)/n;
+      const mb  = b.reduce((s,v) => s+v,0)/n;
+      const num = a.reduce((s,v,i) => s + (v-ma)*(b[i]-mb), 0);
+      const da  = Math.sqrt(a.reduce((s,v) => s+(v-ma)**2, 0));
+      const db  = Math.sqrt(b.reduce((s,v) => s+(v-mb)**2, 0));
+      return (da && db) ? num/(da*db) : 0;
+    }
+
+    // Color scale
+    function corrColor(r) {
+      if (r >= 0.99) return 'rgba(201,168,76,0.5)'; // self = gold
+      if (r > 0)  {
+        const i = Math.round(r * 255);
+        return `rgba(76,175,130,${0.15 + r * 0.7})`;
+      } else {
+        return `rgba(224,92,92,${0.15 + Math.abs(r) * 0.7})`;
+      }
+    }
+
+    // Build table
+    const table = document.getElementById('corrTable');
+    table.innerHTML = '';
+
+    // Header row
+    const thead = document.createElement('tr');
+    const emptyTh = document.createElement('th');
+    emptyTh.className = 'row-label';
+    thead.appendChild(emptyTh);
+    PAIRS.forEach(p => {
+      const th = document.createElement('th');
+      th.textContent = p;
+      thead.appendChild(th);
+    });
+    table.appendChild(thead);
+
+    // Data rows
+    PAIRS.forEach(rowPair => {
+      const tr = document.createElement('tr');
+      const labelTd = document.createElement('td');
+      labelTd.className = 'row-label';
+      labelTd.textContent = rowPair;
+      tr.appendChild(labelTd);
+
+      PAIRS.forEach(colPair => {
+        const td  = document.createElement('td');
+        const r   = rowPair === colPair ? 1 : pearson(returns[rowPair], returns[colPair]);
+        td.textContent = r.toFixed(2);
+        td.style.background = corrColor(r);
+        td.title = `${rowPair} / ${colPair}: ${r.toFixed(4)}`;
+        tr.appendChild(td);
+      });
+      table.appendChild(tr);
+    });
+
+    document.getElementById('corrPeriod').textContent = periodLabel();
+    document.getElementById('corrLoading').style.display = 'none';
+    document.getElementById('corrWrap').style.display    = 'block';
+
+  } catch(e) {
+    document.getElementById('corrLoading').innerHTML = '<span>Failed to load correlation data</span>';
+  }
+}
+  
 // ── INIT ──
 fetchRates().then(() => {
   activePair = 'EUR';
