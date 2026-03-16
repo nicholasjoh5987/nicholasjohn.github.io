@@ -275,6 +275,7 @@ document.querySelectorAll('.period-btn').forEach(btn => {
     btn.classList.add('active');
     activeDays = parseInt(btn.dataset.days);
     if (activePair) loadChart();
+    loadCorrelation();
   });
 });
 
@@ -383,5 +384,6 @@ fetchRates().then(() => {
     c.classList.toggle('active', c.querySelector('.rate-pair')?.textContent === 'USD / EUR');
   });
   loadChart();
+  loadCorrelation();
 });
 setInterval(fetchRates, 60000);
