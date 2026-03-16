@@ -384,6 +384,6 @@ fetchRates().then(() => {
     c.classList.toggle('active', c.querySelector('.rate-pair')?.textContent === 'USD / EUR');
   });
   loadChart();
-  loadCorrelation();
+  setTimeout(() => loadCorrelation(), 500);
 });
 setInterval(fetchRates, 60000);
