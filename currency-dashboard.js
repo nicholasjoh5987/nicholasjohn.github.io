@@ -14,6 +14,66 @@ let activePair = null;
 let activeDays = 7;
 let fxChart    = null;
 
+// ── NEWS TICKER ──
+async function loadNewsTicker() {
+  const RSS_URL = 'https://feeds.reuters.com/reuters/businessNews';
+  const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}&count=20`;
+
+  try {
+    const res  = await fetch(API_URL);
+    const data = await res.json();
+
+    if (!data.items || data.items.length === 0) throw new Error('No items');
+
+    const forex_keywords = ['currency','forex','dollar','euro','yen','pound','yuan','fed','ecb','rate','exchange','inflation','central bank','gdp','trade'];
+
+    const items = data.items.filter(item =>
+      forex_keywords.some(kw =>
+        (item.title + ' ' + (item.description || '')).toLowerCase().includes(kw)
+      )
+    ).slice(0, 15);
+
+    const display = items.length > 0 ? items : data.items.slice(0, 15);
+
+    // Double the items so the ticker loops seamlessly
+    const allItems = [...display, ...display];
+
+    const content = document.getElementById('tickerContent');
+    content.innerHTML = allItems.map(item => `
+      <a href="${item.link}" target="_blank" rel="noopener" class="ticker-item">
+        <span class="ticker-source">Reuters</span>
+        ${item.title}
+      </a>
+    `).join('');
+
+    // Adjust animation speed based on content length
+    const totalItems = allItems.length;
+    const duration   = totalItems * 4;
+    content.style.animationDuration = `${duration}s`;
+
+  } catch(e) {
+    // Fallback to static headlines if RSS fails
+    const fallback = [
+      'Fed signals potential rate pause amid mixed economic data',
+      'Euro strengthens as ECB maintains hawkish stance on inflation',
+      'Japanese Yen under pressure as BOJ holds ultra-loose policy',
+      'Dollar index retreats from multi-week highs on jobs data',
+      'Emerging market currencies face headwinds from strong USD',
+      'GBP rallies after better-than-expected UK inflation figures',
+      'CNY stabilizes as PBOC sets firmer daily fixing rate',
+      'Gold rises as real yields decline across G10 currencies',
+    ];
+    const allFallback = [...fallback, ...fallback];
+    const content = document.getElementById('tickerContent');
+    content.innerHTML = allFallback.map(title => `
+      <span class="ticker-item">
+        <span class="ticker-source">FX News</span>
+        ${title}
+      </span>
+    `).join('');
+  }
+}
+
 // ── POPULATE SELECTS ──
 const allCurrencies = [BASE, ...PAIRS];
 ['fromCurrency','toCurrency'].forEach((id, i) => {
@@ -445,6 +505,7 @@ async function loadVolatility() {
 }
 
 // ── INIT ──
+loadNewsTicker();
 fetchRates().then(() => {
   activePair = 'EUR';
   document.querySelectorAll('.rate-card').forEach(c => {
