@@ -368,6 +368,81 @@ async function loadCorrelation() {
   }
 }
 
+// ── VOLATILITY ──
+async function loadVolatility() {
+  document.getElementById('volLoading').style.display = 'flex';
+  document.getElementById('volGrid').style.display    = 'none';
+
+  const end   = new Date();
+  const start = new Date();
+  if (activeDays === 99999) {
+    start.setFullYear(1999); start.setMonth(0); start.setDate(4);
+  } else {
+    start.setDate(end.getDate() - activeDays);
+  }
+  const fmt = d => d.toISOString().split('T')[0];
+
+  try {
+    const res  = await fetch(
+      `https://api.frankfurter.app/${fmt(start)}..${fmt(end)}?from=${BASE}&to=${PAIRS.join(',')}`
+    );
+    const data = await res.json();
+    const dates = Object.keys(data.rates).sort();
+
+    // Calculate annualized volatility for each pair
+    const results = PAIRS.map(pair => {
+      const returns = [];
+      for (let i = 1; i < dates.length; i++) {
+        const prev = data.rates[dates[i-1]][pair];
+        const curr = data.rates[dates[i]][pair];
+        returns.push((curr - prev) / prev);
+      }
+      const mean  = returns.reduce((s,v) => s+v, 0) / returns.length;
+      const variance = returns.reduce((s,v) => s+(v-mean)**2, 0) / returns.length;
+      const dailyVol = Math.sqrt(variance);
+      const annualVol = dailyVol * Math.sqrt(252) * 100;
+      return { pair, vol: annualVol };
+    });
+
+    // Find max for scaling bars
+    const maxVol = Math.max(...results.map(r => r.vol));
+
+    const grid = document.getElementById('volGrid');
+    grid.innerHTML = '';
+
+    results.forEach(({ pair, vol }) => {
+      const pct     = (vol / maxVol) * 100;
+      const label   = vol < 6 ? 'Low' : vol < 12 ? 'Medium' : 'High';
+      const cls     = vol < 6 ? 'low' : vol < 12 ? 'medium' : 'high';
+      const barColor = vol < 6
+        ? 'var(--green)'
+        : vol < 12
+        ? 'var(--gold)'
+        : 'var(--red)';
+
+      const item = document.createElement('div');
+      item.className = 'vol-item';
+      item.innerHTML = `
+        <div class="vol-item-header">
+          <span class="vol-pair">USD / ${pair}</span>
+          <span class="vol-pct">${vol.toFixed(2)}%</span>
+        </div>
+        <div class="vol-bar-track">
+          <div class="vol-bar-fill" style="width:${pct}%; background:${barColor};"></div>
+        </div>
+        <span class="vol-label ${cls}">${label} Volatility</span>`;
+      grid.appendChild(item);
+    });
+
+    document.getElementById('volPeriod').textContent = periodLabel();
+    document.getElementById('volLoading').style.display = 'none';
+    document.getElementById('volGrid').style.display    = 'grid';
+
+  } catch(e) {
+    document.getElementById('volLoading').innerHTML = '<span>Failed to load volatility data</span>';
+  }
+}
+
 // ── INIT ──
 fetchRates().then(() => {
   activePair = 'EUR';
