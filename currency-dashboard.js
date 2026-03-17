@@ -16,7 +16,7 @@ let fxChart    = null;
 
 // ── NEWS TICKER ──
 async function loadNewsTicker() {
-  const RSS_URL = 'https://feeds.reuters.com/reuters/businessNews';
+  const RSS_URL = 'https://www.forexlive.com/feed/news';
   const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}&count=20`;
 
   try {
