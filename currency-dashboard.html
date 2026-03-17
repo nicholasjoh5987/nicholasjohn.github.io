@@ -9,7 +9,16 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
-
+<!-- NEWS TICKER -->
+<div class="ticker-bar" id="tickerBar">
+  <div class="ticker-label">FX News</div>
+  <div class="ticker-track">
+    <div class="ticker-content" id="tickerContent">
+      <span class="ticker-loading">Loading headlines…</span>
+    </div>
+  </div>
+</div>
+  
 <header>
   <div class="header-left">
     <a href="index.html" style="display:inline-flex; align-items:center; gap:0.5rem; color:var(--muted); text-decoration:none; font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; transition:color 0.3s; margin-bottom:0.6rem;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">
